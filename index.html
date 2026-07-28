@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>小六壬 · 掌诀占卜</title>
+<style>
+/* ===== 水墨星辰背景 ===== */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: -2;
+  background: radial-gradient(ellipse at 30% 20%, rgba(220,210,195,0.3) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 80%, rgba(180,170,150,0.2) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 50%, #f5f0e8 0%, #e8e0d0 100%);
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: -1;
+  opacity: 0.35;
+  background-image:
+    /* 水墨星云 - 大团墨晕 */
+    radial-gradient(ellipse 180px 120px at 15% 25%, rgba(60,50,40,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 120px 200px at 75% 15%, rgba(80,60,40,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 200px 100px at 60% 75%, rgba(50,40,30,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 90px 150px at 90% 50%, rgba(70,55,40,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 150px 80px at 30% 85%, rgba(55,45,35,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 100px 100px at 50% 40%, rgba(40,35,30,0.03) 0%, transparent 70%),
+    /* 星辰 - 大小不一的墨点 */
+    radial-gradient(2px 2px at 12% 18%, rgba(60,50,40,0.15) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 25% 55%, rgba(50,40,30,0.12) 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 40% 12%, rgba(70,55,40,0.1) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 35%, rgba(45,35,25,0.15) 0%, transparent 100%),
+    radial-gradient(1.8px 1.8px at 68% 70%, rgba(55,45,35,0.08) 0%, transparent 100%),
+    radial-gradient(2px 2px at 80% 22%, rgba(60,50,40,0.12) 0%, transparent 100%),
+    radial-gradient(1.2px 1.2px at 90% 58%, rgba(50,40,30,0.1) 0%, transparent 100%),
+    radial-gradient(2.2px 2.2px at 7% 72%, rgba(65,50,35,0.08) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 45% 88%, rgba(55,45,30,0.12) 0%, transparent 100%),
+    radial-gradient(1.8px 1.8px at 72% 42%, rgba(45,35,25,0.1) 0%, transparent 100%),
+    radial-gradient(1px 1px at 32% 32%, rgba(70,55,40,0.08) 0%, transparent 100%),
+    radial-gradient(2px 2px at 88% 80%, rgba(50,40,30,0.1) 0%, transparent 100%),
+    radial-gradient(1.3px 1.3px at 60% 5%, rgba(45,35,25,0.1) 0%, transparent 100%),
+    radial-gradient(1.7px 1.7px at 18% 90%, rgba(55,45,35,0.08) 0%, transparent 100%),
+    /* 远星 - 更淡更小 */
+    radial-gradient(0.8px 0.8px at 5% 10%, rgba(40,35,30,0.2) 0%, transparent 100%),
+    radial-gradient(0.8px 0.8px at 50% 50%, rgba(40,35,30,0.15) 0%, transparent 100%),
+    radial-gradient(0.8px 0.8px at 95% 35%, rgba(40,35,30,0.18) 0%, transparent 100%),
+    radial-gradient(0.8px 0.8px at 22% 65%, rgba(40,35,30,0.12) 0%, transparent 100%),
+    radial-gradient(0.8px 0.8px at 78% 10%, rgba(40,35,30,0.15) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+:root {
+  --paper: #F5F0E8;
+  --ink: #2C2E26;
+  --ink-light: #5A5548;
+  --ink-muted: #8A8578;
+  --red: #A0522D;
+  --red-dark: #7D3D1E;
+  --gold: #B89440;
+  --green: #5A7D5A;
+  --card-bg: rgba(255,252,245,0.88);
+  --border: rgba(160,130,100,0.25);
+  --radius: 0;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --font-body: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
+  --font-title: "ZCOOL KuaiLe", "STKaiti", "KaiTi", serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  min-height: 100vh;
+  padding-bottom: calc(60px + var(--safe-bottom));
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* ===== HEADER ===== */
+.header {
+  text-align: center;
+  padding: 28px 16px 16px;
+  position: relative;
+}
+.header h1 {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 8px;
+  color: var(--ink);
+}
+.header .sub {
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  letter-spacing: 3px;
+  margin-top: 2px;
+}
+.header .sep {
+  width: 40px; height: 1px;
+  background: var(--border);
+  margin: 10px auto;
+}
+
+/* ===== 规诫 ===== */
+.rules-bar {
+  background: rgba(160,82,45,0.06);
+  border: 1px solid rgba(160,82,45,0.15);
+  margin: 0 16px 16px;
+  padding: 10px 14px;
+  font-size: 0.7rem;
+  color: var(--ink-light);
+  line-height: 1.8;
+  letter-spacing: 0.5px;
+}
+.rules-bar strong { color: var(--red); font-weight: 600; }
+
+/* ===== CONTAINER ===== */
+.container { padding: 0 16px 24px; max-width: 500px; margin: 0 auto; }
+
+/* ===== CARD ===== */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-bottom: 14px;
+}
+
+/* ===== 时间输入 ===== */
+.time-section { margin-bottom: 18px; }
+.time-section .label {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+.date-row {
+  display: flex; gap: 8px;
+  margin-bottom: 10px;
+}
+.date-cell {
+  flex: 1;
+}
+.date-cell .hint {
+  font-size: 0.6rem;
+  color: var(--ink-muted);
+  text-align: center;
+  margin-bottom: 3px;
+}
+.date-cell input[type="number"],
+.date-cell select {
+  width: 100%;
+  padding: 8px 4px;
+  text-align: center;
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  background: rgba(255,252,245,0.9);
+  color: var(--ink);
+  outline: none;
+  font-family: var(--font-body);
+  -moz-appearance: textfield;
+}
+.date-cell input[type="number"]:focus,
+.date-cell select:focus {
+  border-color: var(--red);
+}
+.date-cell input[type="number"]::-webkit-inner-spin-button,
+.date-cell input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+.date-cell select { appearance: auto; }
+
+.lunar-display {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  padding: 6px;
+  border: 1px dashed var(--border);
+  min-height: 28px;
+  line-height: 28px;
+}
+
+/* ===== 所问之事 ===== */
+.question-section { margin-bottom: 18px; }
+.question-section .label {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+.question-section textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  background: rgba(255,252,245,0.9);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--ink);
+  resize: vertical;
+  outline: none;
+  line-height: 1.7;
+}
+.question-section textarea:focus {
+  border-color: var(--red);
+}
+.question-section textarea::placeholder {
+  color: #C0B8A8;
+  font-size: 0.78rem;
+}
+
+/* ===== 占卜按钮 ===== */
+.divine-btn-wrap { text-align: center; margin: 4px 0 10px; }
+.divine-btn {
+  display: inline-block;
+  padding: 8px 32px;
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  letter-spacing: 6px;
+  color: var(--red);
+  background: transparent;
+  border: 1.5px solid var(--red);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.divine-btn:hover { background: var(--red); color: #fff; }
+.divine-btn:active { background: var(--red-dark); color: #fff; }
+.divine-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ===== 推演动画 ===== */
+.animating-area {
+  text-align: center;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 14px 0;
+}
+.anim-dots { display: none; }
+.anim-dots.show { display: block; }
+.anim-dots span {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  margin: 0 3px;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+.anim-dots span:nth-child(1) { animation-delay: -0.32s; }
+.anim-dots span:nth-child(2) { animation-delay: -0.16s; }
+.anim-dots span:nth-child(3) { animation-delay: 0s; }
+@keyframes bounce { 0%,80%,100%{transform:scale(0.6)} 40%{transform:scale(1)} }
+
+/* ===== 结果卡 ===== */
+.result-card { display: none; animation: fadeIn 0.6s ease; }
+.result-card.show { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+.result-top {
+  text-align: center;
+  padding: 16px 0 14px;
+  border-bottom: 1px solid var(--border);
+}
+.result-icon { font-size: 2.4rem; margin-bottom: 4px; }
+.result-name {
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: 6px;
+}
+.result-sub {
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  margin-top: 2px;
+}
+.result-luck {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 1px 12px;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+}
+.luck-吉 { border: 1px solid var(--green); color: var(--green); }
+.luck-凶 { border: 1px solid var(--red); color: var(--red); }
+
+.result-body { padding: 14px 0 4px; }
+.result-section { margin-bottom: 14px; }
+.sec-title {
+  font-family: var(--font-title);
+  font-size: 0.78rem;
+  color: var(--ink-light);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 3px;
+}
+.sec-text {
+  font-size: 0.82rem;
+  color: #555;
+  line-height: 1.8;
+  text-indent: 2em;
+}
+
+/* ===== 六神循环 ===== */
+.cycle-show {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  margin: 10px 0 14px;
+}
+.cycle-item {
+  width: 14%;
+  min-width: 50px;
+  text-align: center;
+  padding: 4px 0;
+  font-size: 0.65rem;
+  color: var(--ink-muted);
+  border: 1px solid transparent;
+  transition: all 0.3s;
+}
+.cycle-item.highlight {
+  color: var(--red);
+  border-color: var(--red);
+  font-weight: 600;
+}
+
+/* ===== 历史 ===== */
+.history-toggle {
+  text-align: center; margin: 16px 0 8px;
+}
+.history-toggle button {
+  background: none; border: none;
+  color: var(--ink-muted);
+  font-size: 0.7rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-family: var(--font-body);
+}
+.history-list { display: none; }
+.history-list.show { display: block; }
+.hist-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0; border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+}
+.hist-nums { color: var(--ink-muted); }
+.hist-clear {
+  text-align: center; margin-top: 8px;
+}
+.hist-clear button {
+  background: none; border: none;
+  color: var(--red); font-size: 0.65rem;
+  opacity: 0.5; cursor: pointer;
+  font-family: var(--font-body);
+}
+
+/* ===== 重置按钮 ===== */
+.reset-btn {
+  background: none; border: 1px solid var(--border);
+  color: var(--ink-muted); padding: 4px 16px;
+  font-size: 0.72rem; cursor: pointer; margin-top: 8px;
+  font-family: var(--font-body);
+  letter-spacing: 1px;
+}
+.reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center; padding: 20px 16px 40px;
+  font-size: 0.6rem; color: var(--ink-muted);
+  letter-spacing: 1px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (min-width: 500px) {
+  .container { padding: 0 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>小六壬</h1>
+  <div class="sub">掌诀占卜 · 一事一卦</div>
+  <div class="sep"></div>
+</div>
+
+<div class="rules-bar">
+  <strong>▎心诚则灵</strong> · 以突然起念的此刻为时辰 · 一卦只问一事 · 不可反复算同一事
+</div>
+
+<div class="container">
+
+  <!-- 输入卡 -->
+  <div class="card">
+    <div class="time-section">
+      <div class="label">公历 · 年 月 日 时辰</div>
+      <div class="date-row">
+        <div class="date-cell"><div class="hint">年</div><input type="number" id="year" value="2026" min="1900" max="2100"></div>
+        <div class="date-cell"><div class="hint">月</div><input type="number" id="month" value="7" min="1" max="12"></div>
+        <div class="date-cell"><div class="hint">日</div><input type="number" id="day" value="29" min="1" max="31"></div>
+        <div class="date-cell"><div class="hint">时</div>
+          <select id="hour">
+            <option value="0">子 23-01</option>
+            <option value="1">丑 01-03</option>
+            <option value="2">寅 03-05</option>
+            <option value="3">卯 05-07</option>
+            <option value="4">辰 07-09</option>
+            <option value="5">巳 09-11</option>
+            <option value="6" selected>午 11-13</option>
+            <option value="7">未 13-15</option>
+            <option value="8">申 15-17</option>
+            <option value="9">酉 17-19</option>
+            <option value="10">戌 19-21</option>
+            <option value="11">亥 21-23</option>
+          </select>
+        </div>
+      </div>
+      <div class="lunar-display" id="lunarDisplay">⏎ 点击「起卦」自动推算农历</div>
+    </div>
+
+    <div class="question-section">
+      <div class="label">所问之事</div>
+      <textarea id="question" placeholder="请写下您心中所问之事，需具体、明确……"></textarea>
+    </div>
+
+    <div class="divine-btn-wrap">
+      <button class="divine-btn" id="divineBtn" onclick="startDivine()">起卦</button>
+    </div>
+
+    <div class="animating-area">
+      <div class="anim-dots" id="animDots">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- 六神循环 -->
+    <div class="cycle-show" id="cycleShow">
+      <div class="cycle-item" data-idx="0">大安</div>
+      <div class="cycle-item" data-idx="1">留连</div>
+      <div class="cycle-item" data-idx="2">速喜</div>
+      <div class="cycle-item" data-idx="3">赤口</div>
+      <div class="cycle-item" data-idx="4">小吉</div>
+      <div class="cycle-item" data-idx="5">空亡</div>
+    </div>
+  </div>
+
+  <!-- 结果 -->
+  <div class="card result-card" id="resultCard">
+    <div class="result-top">
+      <div class="result-icon" id="rIcon"></div>
+      <div class="result-name" id="rName"></div>
+      <div class="result-sub" id="rSub"></div>
+      <div class="result-luck" id="rLuck"></div>
+    </div>
+    <div class="result-body">
+      <div class="result-section">
+        <div class="sec-title">概念</div>
+        <div class="sec-text" id="rConcept"></div>
+      </div>
+      <div class="result-section">
+        <div class="sec-title">解卦</div>
+        <div class="sec-text" id="rInterpret"></div>
+      </div>
+    </div>
+    <div style="text-align:center">
+      <button class="reset-btn" onclick="resetAll()">再来一卦</button>
+    </div>
+  </div>
+
+  <!-- 历史 -->
+  <div class="history-toggle">
+    <button onclick="toggleHistory()">📋 记录</button>
+  </div>
+  <div class="card history-list" id="historyList"></div>
+
+  <div class="footer">小六壬 · 仅供娱乐参考 · 事在人为</div>
+</div>
+
+<script>
+// ===== 农历转换 (嵌入式，基于天文年历数据) =====
+// 数据来源: 农历1900-2100年，每字节表示当年信息
+// bit0-3: 闰月(0=无), bit4-7: 闰月天数(0=29, 1=30), 
+// bit8-19: 每月天数(0=29, 1=30)，从正月到十二月(或到闰月)
+// 简化实现: 使用预计算数组
+const LUNAR_INFO = [
+  0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2, //1900-1909
+  0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977, //1910-1919
+  0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970, //1920-1929
+  0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950, //1930-1939
+  0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557, //1940-1949
+  0x06ca0,0x0b550,0x15355,0x04da0,0x0a5b0,0x14573,0x052b0,0x0a9a8,0x0e950,0x06aa0, //1950-1959
+  0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0, //1960-1969
+  0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b6a0,0x195a6, //1970-1979
+  0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570, //1980-1989
+  0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x05ac0,0x0ab60,0x096d5,0x092e0, //1990-1999
+  0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5, //2000-2009
+  0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930, //2010-2019
+  0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530, //2020-2029
+  0x05aa0,0x076a3,0x096d0,0x04afb,0x04ad0,0x0a4d0,0x1d0b6,0x0d250,0x0d520,0x0dd45, //2030-2039
+  0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,0x0aa50,0x1b255,0x06d20,0x0ada0, //2040-2049
+  0x14b63,0x09370,0x049f8,0x04970,0x064b0,0x168a6,0x0ea50,0x06aa0,0x1a6c4,0x0aae0, //2050-2059
+  0x092e0,0x0d2e3,0x0c960,0x0d557,0x0d4a0,0x0da50,0x05d55,0x056a0,0x0a6d0,0x055d4, //2060-2069
+  0x052d0,0x0a9b8,0x0a950,0x0b4a0,0x0b6a6,0x0ad50,0x055a0,0x0aba4,0x0a5b0,0x052b0, //2070-2079
+  0x0b273,0x06930,0x07337,0x06aa0,0x0ad50,0x14b55,0x04b60,0x0a570,0x054e4,0x0d160, //2080-2089
+  0x0e968,0x0d520,0x0daa0,0x16aa6,0x056d0,0x04ae0,0x0a9d4,0x0a4d0,0x0d150,0x0f252, //2090-2099
+  0x0d520 //2100
+];
+
+const HEAVENLY = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const EARTHLY = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const LUNAR_MONTHS = ['正','二','三','四','五','六','七','八','九','十','冬','腊'];
+const LUNAR_DAYS = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十',
+  '十一','十二','十三','十四','十五','十六','十七','十八','十九','二十',
+  '廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
+
+function lunarYearInfo(y) {
+  if (y < 1900 || y > 2100) return null;
+  return LUNAR_INFO[y - 1900];
+}
+
+function gregorianToLunar(year, month, day) {
+  // 基准: 1900-01-31 = 农历庚子年正月初一
+  const baseDate = new Date(1900, 0, 31);
+  const target = new Date(year, month - 1, day);
+  const offset = Math.floor((target - baseDate) / 86400000);
+  if (offset < 0) return { lunarYear: year, lunarMonth: 1, lunarDay: 1, isLeap: false, yearName: '庚子' };
+
+  let lYear, lMonth, lDay, isLeap = false;
+  let i, yearDays = 0;
+
+  // 计算年份偏移
+  for (i = 1900; i < 2101 && offset > yearDays; i++) {
+    yearDays += lunarYearDays(i);
+  }
+  if (i > 2100) i = 2100;
+  lYear = i - 1;
+
+  let rest = offset;
+  for (i = 1900; i < lYear; i++) {
+    rest -= lunarYearDays(i);
+  }
+
+  // 计算月份
+  let monthDays, leapMonth = leapMonthOf(lYear);
+  let leapDays = leapMonthDays(lYear);
+  let totalDays = 0;
+
+  for (lMonth = 1; lMonth <= 12; lMonth++) {
+    monthDays = lunarMonthDays(lYear, lMonth);
+    if (rest < monthDays) {
+      lDay = rest + 1;
+      break;
+    }
+    rest -= monthDays;
+    totalDays += monthDays;
+
+    // 如果有闰月，且在当前月之后插入
+    if (leapMonth > 0 && lMonth === leapMonth) {
+      if (rest < leapDays) {
+        isLeap = true;
+        lDay = rest + 1;
+        // lMonth不变，是闰该月
+        break;
+      }
+      rest -= leapDays;
+      totalDays += leapDays;
+    }
+  }
+
+  if (lMonth > 12) {
+    // 兜底
+    lMonth = 12;
+    lDay = lunarMonthDays(lYear, 12);
+  }
+
+  const ganZhi = getYearGanZhi(lYear);
+
+  return {
+    lunarYear: lYear,
+    lunarMonth: lMonth,
+    lunarDay: lDay || 1,
+    isLeap: isLeap,
+    yearName: ganZhi,
+    monthName: (isLeap ? '闰' : '') + LUNAR_MONTHS[lMonth - 1] + '月',
+    dayName: LUNAR_DAYS[(lDay || 1) - 1]
+  };
+}
+
+function lunarYearDays(y) {
+  let sum = 348; // 12*29
+  const info = lunarYearInfo(y);
+  if (!info) return 365;
+  for (let i = 0x8000; i > 0x8; i >>= 1) {
+    sum += (info & i) ? 1 : 0;
+  }
+  sum += leapMonthDays(y);
+  return sum;
+}
+
+function leapMonthOf(y) {
+  const info = lunarYearInfo(y);
+  if (!info) return 0;
+  return info & 0xf;
+}
+
+function leapMonthDays(y) {
+  const info = lunarYearInfo(y);
+  if (!info) return 0;
+  const lm = info & 0xf;
+  if (lm === 0) return 0;
+  return (info & 0x10000) ? 30 : 29;
+}
+
+function lunarMonthDays(y, m) {
+  const info = lunarYearInfo(y);
+  if (!info) return 29;
+  return (info & (0x10000 >> m)) ? 30 : 29;
+}
+
+function getYearGanZhi(y) {
+  const offset = y - 1900;
+  const g = (offset + 24) % 10; // 庚子年
+  const z = (offset + 0) % 12;  // 子年
+  return HEAVENLY[g] + EARTHLY[z];
+}
+
+// ===== 六神数据 =====
+const POSITIONS = [
+  { id:1, name:'大安', icon:'🌳', luck:'吉',
+    concept:'大安属木，青龙。主安稳、平和、守成。位居东方，万物生长之象。此卦宜守不宜攻，宜静不宜动。',
+    template:'大安主安泰安稳，所问之事宜守成、不宜冒进。整体走向平稳顺利，不宜做重大变动。$问题$之事，建议以现有基础为依托，稳扎稳打。事情发展节奏偏慢，不必急于求成，按部就班推进即可。'>
+  },
+  { id:2, name:'留连', icon:'🌊', luck:'凶',
+    concept:'留连属水，玄武。主拖延、反复、纠缠。位居北方，水性缠绵之象。此卦事缓则圆，欲速则不达。',
+    template:'留连主事多反复，所问之事进度受阻或陷入胶着。$问题$这件事，当前时机尚不成熟，强行推进反而容易生变。建议暂时放下期待，静待转机。留连也主旧事重提，如果是搁置已久的事项，此刻重新审视或许能找到突破口。'>
+  },
+  { id:3, name:'速喜', icon:'🔥', luck:'吉',
+    concept:'速喜属火，朱雀。主迅速、喜讯、机遇。位居南方，火光迸发之象。此卦诸事可成，快速可成。',
+    template:'速喜主喜事将至，所问之事发展速度会比预期快。$问题$这件事，形势对你有利，推进效率会比较高，大概率短期内看到结果。但速喜也主"快"，如果后续迟迟没有消息反而与卦象不符，需留意是否有隐藏变数。主动把握机会，积极进取，事半功倍。'>
+  },
+  { id:4, name:'赤口', icon:'⚔️', luck:'凶',
+    concept:'赤口属金，白虎。主口舌、是非、争执。位居西方，兵戈之象。此卦谨言慎行，以退为进。',
+    template:'赤口主口舌是非，所问之事可能涉及争执或纠纷。$问题$这件事，当前形势对你不太有利，容易陷入言语冲突或立场对立。建议以退为进，少说多做。如果涉及谈判或交涉，暂缓为宜。注意文书、合同、措辞等细节，避免出现纰漏。'>
+  },
+  { id:5, name:'小吉', icon:'🌈', luck:'吉',
+    concept:'小吉属木，六合。主小成、顺遂、喜报。位居中土，天地交泰之象。此卦积小胜为大胜。',
+    template:'小吉主小有所成，所问之事总体顺心如意。$问题$这件事，虽然不一定有惊天动地的结果，但会以你满意的方向推进。小吉之卦贵在"小"——期待合理的回报，不要贪大求全。每一小步都在累积，保持耐心，结果自然来。'>
+  },
+  { id:6, name:'空亡', icon:'💫', luck:'凶',
+    concept:'空亡属土，勾陈。主落空、虚耗、无果。位居中央，空寂之象。此卦一切皆虚，宜静不宜动。',
+    template:'空亡主所求落空，所问之事的结果可能不如预期。$问题$这件事，当前的天时地利人和尚未齐全，投入产出可能不成正比。空亡不代表永远不行，而是此刻时机不对。建议暂时放下执念，等待新的契机出现。有时候"空"也是在为新的可能性腾出空间。'>
+  }
+];
+
+// ===== 起卦逻辑 =====
+function calculate(lM, lD, lH) {
+  let pos = 0;
+  pos = (pos + (lM - 1)) % 6;
+  pos = (pos + (lD - 1)) % 6;
+  pos = (pos + lH) % 6; // lH is 0-11 (子=0, 丑=1...)
+  return pos;
+}
+
+function getInterpretation(pos, question) {
+  const p = POSITIONS[pos];
+  let text = p.template.replace(/\$问题\$/g, question || '所问之事');
+  // 首句缩进已在CSS中处理
+  return text;
+}
+
+// ===== UI =====
+function startDivine() {
+  const btn = document.getElementById('divineBtn');
+  if (btn.disabled) return;
+
+  const question = document.getElementById('question').value.trim();
+  if (!question) {
+    alert('请先写下所问之事');
+    return;
+  }
+
+  const year = parseInt(document.getElementById('year').value) || 2026;
+  const month = parseInt(document.getElementById('month').value) || 1;
+  const day = parseInt(document.getElementById('day').value) || 1;
+  const hour = parseInt(document.getElementById('hour').value);
+
+  if (year < 1900 || year > 2100) { alert('年份范围：1900-2100'); return; }
+  if (month < 1 || month > 12) { alert('月份范围：1-12'); return; }
+
+  // 显示农历
+  const lunar = gregorianToLunar(year, month, day);
+  document.getElementById('lunarDisplay').textContent =
+    '农历 ' + lunar.yearName + '年 ' + lunar.monthName + ' ' + lunar.dayName + ' · ' + EARTHLY[hour] + '时';
+
+  // 隐藏旧结果
+  document.getElementById('resultCard').classList.remove('show');
+
+  // 动效
+  btn.disabled = true;
+  btn.textContent = '推演中...';
+  document.getElementById('animDots').classList.add('show');
+  clearHighlights();
+
+  // 计算
+  const lM = lunar.lunarMonth;
+  const lD = lunar.lunarDay;
+  const lH = hour; // 0-11
+  const pos = calculate(lM, lD, lH);
+
+  // 三步动画
+  setTimeout(() => {
+    highlightStep((lM - 1) % 6);
+  }, 400);
+  setTimeout(() => {
+    clearHighlights();
+    highlightStep(((lM - 1) + (lD - 1)) % 6);
+  }, 900);
+  setTimeout(() => {
+    clearHighlights();
+    highlightStep(pos);
+
+    // 显示结果
+    showResult(pos, [lM, lD, lH], question, lunar);
+    btn.disabled = false;
+    btn.textContent = '起卦';
+    document.getElementById('animDots').classList.remove('show');
+  }, 1500);
+}
+
+function clearHighlights() {
+  document.querySelectorAll('.cycle-item').forEach(el => el.classList.remove('highlight'));
+}
+
+function highlightStep(idx) {
+  const el = document.querySelector(`.cycle-item[data-idx="${idx}"]`);
+  if (el) el.classList.add('highlight');
+}
+
+function showResult(pos, nums, question, lunar) {
+  const p = POSITIONS[pos];
+  const card = document.getElementById('resultCard');
+
+  document.getElementById('rIcon').textContent = p.icon;
+  document.getElementById('rName').textContent = p.name;
+  document.getElementById('rSub').textContent =
+    nums[0] + '-' + nums[1] + '-' + nums[2] + ' · ' +
+    lunar.yearName + '年' + lunar.monthName + lunar.dayName + ' ' + EARTHLY[nums[2]] + '时';
+  document.getElementById('rLuck').textContent = '【' + p.luck + '】';
+  document.getElementById('rLuck').className = 'result-luck luck-' + p.luck;
+  document.getElementById('rConcept').textContent = p.concept;
+  document.getElementById('rInterpret').textContent = getInterpretation(pos, question);
+
+  card.classList.add('show');
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // 保存历史
+  addHistory(p, nums, question);
+}
+
+// ===== 历史 =====
+let history = [];
+function addHistory(pos, nums, question) {
+  history.unshift({
+    name: pos.name, luck: pos.luck, icon: pos.icon,
+    nums: nums.join('-'), question: question.slice(0, 20) + (question.length > 20 ? '…' : ''),
+    time: new Date().toLocaleString('zh-CN', {month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})
+  });
+  if (history.length > 30) history.pop();
+  try { localStorage.setItem('xlr_history', JSON.stringify(history)); } catch(e) {}
+}
+
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem('xlr_history');
+    if (raw) history = JSON.parse(raw);
+  } catch(e) { history = []; }
+}
+
+function renderHistory() {
+  const el = document.getElementById('historyList');
+  if (history.length === 0) {
+    el.innerHTML = '<div style="text-align:center;color:var(--ink-muted);padding:10px;font-size:0.7rem">暂无记录</div>';
+    return;
+  }
+  el.innerHTML = history.map(h =>
+    '<div class="hist-item"><span>' + h.icon + ' ' + h.name +
+    ' <span style="font-size:0.6rem;color:var(--ink-muted)">' + h.luck + '</span></span>' +
+    '<span><span class="hist-nums">' + h.nums + '</span> · ' + h.time + '</span></div>'
+  ).join('') +
+  '<div class="hist-clear"><button onclick="clearHistory()">清空记录</button></div>';
+}
+
+function toggleHistory() {
+  const el = document.getElementById('historyList');
+  el.classList.toggle('show');
+  if (el.classList.contains('show')) renderHistory();
+}
+
+function clearHistory() {
+  history = [];
+  try { localStorage.setItem('xlr_history', JSON.stringify(history)); } catch(e) {}
+  renderHistory();
+}
+
+function resetAll() {
+  document.getElementById('resultCard').classList.remove('show');
+  document.getElementById('question').value = '';
+  document.getElementById('animDots').classList.remove('show');
+  clearHighlights();
+  document.getElementById('lunarDisplay').textContent = '⏎ 点击「起卦」自动推算农历';
+  document.getElementById('divineBtn').disabled = false;
+  document.getElementById('divineBtn').textContent = '起卦';
+}
+
+// ===== 初始化时间 =====
+function initTime() {
+  const now = new Date();
+  document.getElementById('year').value = now.getFullYear();
+  document.getElementById('month').value = now.getMonth() + 1;
+  document.getElementById('day').value = now.getDate();
+  // 时辰: 子23-1(0),丑1-3(1),寅3-5(2),卯5-7(3),辰7-9(4),巳9-11(5),
+  // 午11-13(6),未13-15(7),申15-17(8),酉17-19(9),戌19-21(10),亥21-23(11)
+  const h = now.getHours();
+  let hourIdx;
+  if (h >= 23 || h < 1) hourIdx = 0;
+  else if (h < 3) hourIdx = 1;
+  else if (h < 5) hourIdx = 2;
+  else if (h < 7) hourIdx = 3;
+  else if (h < 9) hourIdx = 4;
+  else if (h < 11) hourIdx = 5;
+  else if (h < 13) hourIdx = 6;
+  else if (h < 15) hourIdx = 7;
+  else if (h < 17) hourIdx = 8;
+  else if (h < 19) hourIdx = 9;
+  else if (h < 21) hourIdx = 10;
+  else hourIdx = 11;
+  document.getElementById('hour').value = hourIdx;
+}
+
+// ===== 初始化 =====
+loadHistory();
+initTime();
+</script>
+</body>
+</html>
