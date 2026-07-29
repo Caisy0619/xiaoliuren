@@ -689,14 +689,12 @@ function startDivine() {
   const day = parseInt(document.getElementById('day').value) || 1;
   const hourVal = parseInt(document.getElementById('hour').value);
   const hourIdx = hourVal % 12;  // 子(0/12)→0, 丑(1)→1, ... 亥(11)→11
-  const dayOffset = hourVal === 12 ? 1 : 0;  // 00(晚子)→次日
 
   if (year < 1900 || year > 2100) { alert('年份范围：1900-2100'); return; }
   if (month < 1 || month > 12) { alert('月份范围：1-12'); return; }
 
-  // 子时跨日处理
-  const d = new Date(year, month - 1, day + dayOffset);
-  const lunar = gregorianToLunar(d.getFullYear(), d.getMonth() + 1, d.getDate());
+  // 显示农历
+  const lunar = gregorianToLunar(year, month, day);
   document.getElementById('lunarDisplay').textContent =
     '农历 ' + lunar.yearName + '年 ' + lunar.monthName + ' ' + lunar.dayName + ' · ' + EARTHLY[hourIdx] + '时';
 
@@ -826,8 +824,10 @@ function initTime() {
   document.getElementById('year').value = now.getFullYear();
   document.getElementById('month').value = now.getMonth() + 1;
   document.getElementById('day').value = now.getDate();
-  // 时辰: 子23-1(0),丑1-3(1),寅3-5(2),卯5-7(3),辰7-9(4),巳9-11(5),
-  // 午11-13(6),未13-15(7),申15-17(8),酉17-19(9),戌19-21(10),亥21-23(11)
+  // 时辰: 子(23-00/00-01)→0/12, 丑(01-03)→1, 寅(03-05)→2,
+  // 卯(05-07)→3, 辰(07-09)→4, 巳(09-11)→5,
+  // 午(11-13)→6, 未(13-15)→7, 申(15-17)→8,
+  // 酉(17-19)→9, 戌(19-21)→10, 亥(21-23)→11
   const h = now.getHours();
   let hourIdx;
   if (h >= 23 || h < 1) hourIdx = 0;      // 子:23-01
@@ -842,8 +842,6 @@ function initTime() {
   else if (h < 19) hourIdx = 9;             // 酉
   else if (h < 21) hourIdx = 10;            // 戌
   else hourIdx = 11;                         // 亥
-  // 子时时段: h=23→显示23(value=0), h=0→显示00(value=12)
-  if (h === 0) hourIdx = 12;  // 晚子→value=12
   document.getElementById('hour').value = hourIdx;
 }
 
